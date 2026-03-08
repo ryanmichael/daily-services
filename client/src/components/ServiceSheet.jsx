@@ -10,6 +10,17 @@ const SERVICE_LABELS = {
 
 const SOURCE_BOOKS = ['Octoechos', 'Triodion', 'Pentecostarion', 'Menaion', 'Horologion', 'Euchologion', 'Typikon', 'Psalter'];
 
+// Returns true for GOA website artifact blocks that should never be rendered.
+function isArtifactBlock(text) {
+  if (!text) return false;
+  const t = text.trim();
+  // Chanter attribution lines: "c1011 - SDedes/ c1232 - GTheodoridis/ ..."
+  if (/^c\d+\s*-/.test(t)) return true;
+  // UI button labels
+  if (/^(Show|Hide)\s+Stichologia$/i.test(t)) return true;
+  return false;
+}
+
 // Returns true for blocks that are structural headers / book labels, not liturgical content.
 function isHeaderBlock(text) {
   if (!text) return true;
@@ -79,7 +90,8 @@ function formatDate(dateStr) {
 
 export default function ServiceSheet({ data }) {
   const { date, type, serviceTitle, blocks } = data;
-  const { context, bodyBlocks } = useMemo(() => splitPreambleFromBody(blocks), [blocks]);
+  const cleanBlocks = useMemo(() => blocks.filter(b => !isArtifactBlock(b.text)), [blocks]);
+  const { context, bodyBlocks } = useMemo(() => splitPreambleFromBody(cleanBlocks), [cleanBlocks]);
   const sections = useMemo(() => groupIntoSections(bodyBlocks), [bodyBlocks]);
   const formattedDate = useMemo(() => formatDate(date), [date]);
 
