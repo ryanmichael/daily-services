@@ -116,7 +116,15 @@ export default function ServiceSheet({ data }) {
     blocks
       .filter(b => !isArtifactBlock(b.text))
       .map(b => ({ ...b, text: stripInlineArtifacts(b.text) }))
-      .filter(b => b.text && b.text.length > 1),
+      .filter(b => b.text && b.text.length > 1)
+      .map(b => {
+        // Reclassify text blocks that are rubric/instruction lines so they
+        // render without speaker attribution (server may have missed these).
+        if (b.type === 'text' && /^From\s/i.test(b.text)) {
+          return { ...b, type: 'rubric', speaker: null };
+        }
+        return b;
+      }),
     [blocks]);
   const { context, bodyBlocks } = useMemo(() => splitPreambleFromBody(cleanBlocks), [cleanBlocks]);
   const sections = useMemo(() => groupIntoSections(bodyBlocks), [bodyBlocks]);
