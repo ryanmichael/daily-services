@@ -124,8 +124,10 @@ export default function ServiceSheet({ data }) {
         // render without speaker attribution (server may have missed these).
         if (b.type === 'text') {
           const isInstruction =
-            // Source/category references: "From the Triodion.", "For the Saints."
-            /^(From|For)\s/i.test(b.text) ||
+            // Short source/category references: "From the Triodion.", "For the Saints."
+            // Length-guarded so long litany petitions ("For the peace from above
+            // and for the salvation of our souls...") are NOT caught.
+            (/^(From|For)\s/i.test(b.text) && b.text.length < 60) ||
             // Stage directions: "Stand for the Entrance.", "Bow your heads.", etc.
             /^(Stand|Sit|Bow|Kneel|Rise|Prostrate|Venerate|Remain|Face|Turn)\b/i.test(b.text);
           if (isInstruction) return { ...b, type: 'rubric', speaker: null };

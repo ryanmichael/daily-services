@@ -12,10 +12,15 @@ const cheerio = require('cheerio');
 const SPEAKERS = ['PRIEST', 'DEACON', 'CHOIR', 'READER', 'CHANTER', 'PEOPLE', 'BISHOP', 'SUBDEACON'];
 const SOURCE_BOOKS = ['Octoechos', 'Triodion', 'Pentecostarion', 'Menaion', 'Horologion', 'Euchologion', 'Typikon', 'Psalter'];
 
-// Patterns that identify rubric / instruction text (not actual liturgical text)
+// Patterns that identify rubric / instruction text (not actual liturgical text).
+// Keep these NARROW — common words like "For", "In", "The", "And" start both
+// instructions AND actual liturgical text (litanies, responses, psalms).
 const RUBRIC_PATTERNS = [
-  /^(The|Then|After|And|While|During|At|In|Before|Following|From|For)\b/i,
+  // Unambiguous narrative instructions: "Then the priest...", "After the reading..."
+  /^(Then|After|Before|Following|While|During)\b/i,
+  // Stage directions
   /^(Stand|Sit|Bow|Kneel|Rise|Prostrate|Venerate|Remain|Face|Turn)\b/i,
+  // Bracketed content and notes
   /^\[.*\]$/,
   /^(Note:|N\.B\.)/i,
 ];
