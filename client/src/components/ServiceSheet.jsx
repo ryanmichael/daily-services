@@ -8,6 +8,44 @@ const SERVICE_LABELS = {
   li: 'Divine Liturgy',
 };
 
+const SOURCE_BOOKS = ['Octoechos', 'Triodion', 'Pentecostarion', 'Menaion', 'Horologion', 'Euchologion', 'Typikon', 'Psalter'];
+
+// Returns true for blocks that are structural headers / book labels, not liturgical content.
+function isHeaderBlock(text) {
+  if (!text) return true;
+  const t = text.trim();
+  // Pure source book name or book + " - detail" (e.g. "Menaion - March 9")
+  if (SOURCE_BOOKS.includes(t)) return true;
+  if (SOURCE_BOOKS.some(book => t.startsWith(book + ' - '))) return true;
+  // All-caps service / section headings (e.g. "VESPERS", "AT LORD I HAVE CRIED")
+  if (/^[A-Z\s]+$/.test(t) && t.length < 60) return true;
+  // Separator lines (dashes, underscores)
+  if (/^[-_—\s]{2,}$/.test(t)) return true;
+  // Short ambiguous labels (≤ 25 chars) not already caught above (e.g. "Books - Sources")
+  if (t.length <= 25) return true;
+  return false;
+}
+
+// Splits blocks into preamble context (shown below header) and body blocks (shown in sections).
+// Preamble = all blocks before the first speaker-tagged or glory block.
+function splitPreambleFromBody(blocks) {
+  let bodyStart = -1;
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].speaker || blocks[i].type === 'glory') {
+      bodyStart = i;
+      break;
+    }
+  }
+  // No speaker found — treat everything as body
+  if (bodyStart === -1) return { context: [], bodyBlocks: blocks };
+
+  const preamble = blocks.slice(0, bodyStart);
+  const bodyBlocks = blocks.slice(bodyStart);
+  // Keep only meaningful context lines; discard headers / empty blocks
+  const context = preamble.filter(b => b.type !== 'empty' && !isHeaderBlock(b.text));
+  return { context, bodyBlocks };
+}
+
 // Collapse consecutive blocks with the same source book into named sections.
 function groupIntoSections(blocks) {
   const sections = [];
@@ -41,7 +79,8 @@ function formatDate(dateStr) {
 
 export default function ServiceSheet({ data }) {
   const { date, type, serviceTitle, blocks } = data;
-  const sections = useMemo(() => groupIntoSections(blocks), [blocks]);
+  const { context, bodyBlocks } = useMemo(() => splitPreambleFromBody(blocks), [blocks]);
+  const sections = useMemo(() => groupIntoSections(bodyBlocks), [bodyBlocks]);
   const formattedDate = useMemo(() => formatDate(date), [date]);
 
   return (
@@ -52,6 +91,13 @@ export default function ServiceSheet({ data }) {
         <p className="sheet-header-date">{formattedDate}</p>
         <h1 className="sheet-header-title">{serviceTitle || SERVICE_LABELS[type] || 'Service'}</h1>
         <div className="sheet-header-subtitle">Greek Orthodox Archdiocese of America</div>
+        {context.length > 0 && (
+          <div className="sheet-context">
+            {context.map((block, i) => (
+              <p key={i} className="sheet-context-line">{block.text}</p>
+            ))}
+          </div>
+        )}
         <div className="sheet-header-rule sheet-header-rule--bottom" />
       </header>
 

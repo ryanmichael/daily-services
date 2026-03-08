@@ -68,6 +68,20 @@
   opacity: 0.8;
 }
 
+/* ── Preamble context (occasion / feast description below title) ── */
+.sheet-context {
+  margin-top: 1rem;
+}
+
+.sheet-context-line {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: #8b1a1a;
+  line-height: 1.5;
+  margin: 0.2rem 0;
+}
+
 /* ── Body ── */
 .sheet-body {
   margin-top: 0.5rem;
@@ -253,6 +267,10 @@
 
   .sheet-header-subtitle {
     font-size: 6pt;
+  }
+
+  .sheet-context-line {
+    font-size: 9pt;
   }
 
   .block-text {
