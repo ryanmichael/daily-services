@@ -135,7 +135,9 @@ export default function ServiceSheet({ data }) {
             // Named liturgical section titles (short): "Trisagion Prayers.", "Prayer of St. Ephrem"
             (/^(Trisagion|Prayer\s+of|Litany\s+of|Canon\s+of|Service\s+of)\b/i.test(b.text) && b.text.length < 60) ||
             // Psalm references: "Psalm 103 (104)."
-            /^Psalm\s+\d+/i.test(b.text);
+            /^Psalm\s+\d+/i.test(b.text) ||
+            // Short liturgical cue shorthands: "Glory.", "Both now.", "Glory. Both now."
+            /^(Glory|Both now|Glory\.\s+Both now|Alleluia|Amen)\.?$/i.test(b.text);
           if (isInstruction) return { ...b, type: 'rubric', speaker: null };
         }
         return b;
