@@ -133,7 +133,9 @@ export default function ServiceSheet({ data }) {
             // Stage directions: "Stand for the Entrance.", "Bow your heads.", etc.
             /^(Stand|Sit|Bow|Kneel|Rise|Prostrate|Venerate|Remain|Face|Turn)\b/i.test(b.text) ||
             // Named liturgical section titles (short): "Trisagion Prayers.", "Prayer of St. Ephrem"
-            (/^(Trisagion|Prayer\s+of|Litany\s+of|Canon\s+of|Service\s+of)\b/i.test(b.text) && b.text.length < 60);
+            (/^(Trisagion|Prayer\s+of|Litany\s+of|Canon\s+of|Service\s+of)\b/i.test(b.text) && b.text.length < 60) ||
+            // Psalm references: "Psalm 103 (104)."
+            /^Psalm\s+\d+/i.test(b.text);
           if (isInstruction) return { ...b, type: 'rubric', speaker: null };
         }
         return b;
