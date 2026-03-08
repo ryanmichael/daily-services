@@ -18,13 +18,29 @@ function isArtifactBlock(text) {
   if (/^c\d+\s*-/.test(t)) return true;
   // UI button labels
   if (/^(Show|Hide)\s+Stichologia$/i.test(t)) return true;
+  // Source reference lines with trailing dashes: "From Menaion - - -"
+  if (/^From\s+\w[\w\s]*(-\s*){2,}$/i.test(t)) return true;
   return false;
 }
 
 // Strip anything in square brackets from block text (e.g. [SAAS], [SD], [Note: ...]).
+// Also strips leading musical instruction prefixes and drops blocks that become empty.
 function stripInlineArtifacts(text) {
   if (!text) return text;
-  return text.replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim();
+  // Remove bracketed content
+  let t = text.replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim();
+  // Strip leading instruction prefixes repeatedly until stable:
+  //   Hymn-type labels:  "Idiomelon."  "Automelon."  "Sticheron."  etc.
+  //   Mode/Tone labels:  "Mode pl. 4."  "Mode 2."  "Tone 4."  "Plagal Mode 2."
+  //   Dash separators:   "- - -"
+  for (let pass = 0; pass < 5; pass++) {
+    const before = t;
+    t = t.replace(/^(?:Idiomelon|Automelon|Prosomelon|Sticheron|Doxastikon|Theotokion|Stavrotheotokion|Kontakion|Troparion|Kathisma|Ikos|Oikos)\.\s*/i, '');
+    t = t.replace(/^(?:Plagal\s+)?(?:Mode|Tone)\s+\S[^.]*?\d\.\s*/i, '');
+    t = t.replace(/^(-\s*){2,}/, '');
+    if (t === before) break;
+  }
+  return t.trim();
 }
 
 // Returns true for blocks that are structural headers / book labels, not liturgical content.
@@ -99,7 +115,8 @@ export default function ServiceSheet({ data }) {
   const cleanBlocks = useMemo(() =>
     blocks
       .filter(b => !isArtifactBlock(b.text))
-      .map(b => ({ ...b, text: stripInlineArtifacts(b.text) })),
+      .map(b => ({ ...b, text: stripInlineArtifacts(b.text) }))
+      .filter(b => b.text && b.text.length > 1),
     [blocks]);
   const { context, bodyBlocks } = useMemo(() => splitPreambleFromBody(cleanBlocks), [cleanBlocks]);
   const sections = useMemo(() => groupIntoSections(bodyBlocks), [bodyBlocks]);
