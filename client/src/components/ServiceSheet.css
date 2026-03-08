@@ -195,9 +195,9 @@
 
 .block-rubric-text {
   font-family: 'EB Garamond', serif;
-  font-style: italic;
+  font-style: normal;
   font-size: 0.95rem;
-  color: #8b1a1a;
+  color: #888;
   line-height: 1.5;
 }
 
