@@ -1,0 +1,303 @@
+/* ═══════════════════════════════════════════════════════
+   Orthodox Service Sheet — Liturgical Visual Design
+   Fonts: Cinzel (headings/labels) + EB Garamond (body)
+   Palette:
+     #1a1209  — ink
+     #8b1a1a  — rubric red
+     #c8a96e  — gold
+     #fdf8f0  — page background
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Page / Sheet ── */
+.service-sheet {
+  background: #fdf8f0;
+  color: #1a1209;
+  width: 100%;
+  max-width: 760px;
+  margin: 2rem auto;
+  padding: 3rem 4rem;
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.18), 0 1px 4px rgba(0, 0, 0, 0.08);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+/* ── Header ── */
+.sheet-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.sheet-header-rule {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #c8a96e 20%, #c8a96e 80%, transparent);
+  margin-bottom: 1.25rem;
+}
+
+.sheet-header-rule--bottom {
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+}
+
+.sheet-header-date {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8b1a1a;
+  margin-bottom: 0.6rem;
+}
+
+.sheet-header-title {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #1a1209;
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+
+.sheet-header-subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6b5e4a;
+  opacity: 0.8;
+}
+
+/* ── Body ── */
+.sheet-body {
+  margin-top: 0.5rem;
+}
+
+/* ── Section dividers ── */
+.sheet-section {
+  margin-bottom: 0.5rem;
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 2rem 0 1rem;
+}
+
+.section-divider-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c8a96e);
+}
+
+.section-divider:last-child .section-divider-rule:last-child {
+  background: linear-gradient(to left, transparent, #c8a96e);
+}
+
+.section-divider-rule:last-child {
+  background: linear-gradient(to left, transparent, #c8a96e);
+}
+
+.section-divider-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8b1a1a;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Blocks ── */
+.block {
+  margin-bottom: 1rem;
+}
+
+/* Liturgical text blocks */
+.block--text {
+  padding-left: 1rem;
+  border-left: 2px solid #c8a96e;
+}
+
+.block--text.block--has-speaker {
+  padding-left: 0;
+  border-left: none;
+}
+
+/* Speaker label */
+.block-speaker {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-variant: small-caps;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+  line-height: 1.4;
+}
+
+.speaker--priest  { color: #7a5c2e; }
+.speaker--deacon  { color: #2e5c7a; }
+.speaker--choir   { color: #5c2e7a; }
+.speaker--reader  { color: #3a6b3a; }
+.speaker--people  { color: #7a5c2e; }
+.speaker--default { color: #6b5e4a; }
+
+.block--has-speaker .block-text {
+  padding-left: 1rem;
+  border-left: 2px solid #c8a96e;
+}
+
+/* Source book pill tag */
+.block-source-tag {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8b1a1a;
+  border: 1px solid #c8a96e;
+  border-radius: 10px;
+  padding: 0.1rem 0.5rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.6;
+}
+
+/* Body text */
+.block-text {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: #1a1209;
+  text-indent: 0;
+  margin: 0;
+}
+
+/* Rubric / instruction lines */
+.block--rubric {
+  margin: 0.75rem 0;
+}
+
+.block-rubric-text {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #8b1a1a;
+  line-height: 1.5;
+}
+
+/* Glory / Both now lines */
+.block--glory {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.block-glory-text {
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  color: #8b1a1a;
+  text-transform: uppercase;
+}
+
+/* ── Footer ── */
+.sheet-footer {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.sheet-footer-rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c8a96e 20%, #c8a96e 80%, transparent);
+  margin-bottom: 0.75rem;
+}
+
+.sheet-footer-text {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b5e4a;
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PRINT STYLES
+   US Letter, 1.5cm margins, 12pt minimum body
+   ═══════════════════════════════════════════════════════ */
+@media print {
+  @page {
+    size: letter;
+    margin: 1.5cm;
+  }
+
+  .service-sheet {
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    background: white;
+    max-width: 100%;
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+
+  .sheet-header-title {
+    font-size: 20pt;
+  }
+
+  .sheet-header-date {
+    font-size: 7.5pt;
+  }
+
+  .sheet-header-subtitle {
+    font-size: 6pt;
+  }
+
+  .block-text {
+    font-size: 12pt;
+  }
+
+  .block-rubric-text {
+    font-size: 10pt;
+  }
+
+  .block-speaker {
+    font-size: 7pt;
+  }
+
+  .block-glory-text {
+    font-size: 8pt;
+  }
+
+  .section-divider-label {
+    font-size: 6.5pt;
+  }
+
+  /* Prevent orphan speaker labels */
+  .block--text {
+    break-inside: avoid;
+  }
+
+  .block--has-speaker {
+    break-inside: avoid;
+  }
+
+  /* No colors on rules — print in grayscale gracefully */
+  .sheet-header-rule,
+  .sheet-header-rule--bottom,
+  .sheet-footer-rule {
+    background: #ccc;
+  }
+
+  .section-divider-rule {
+    background: #bbb;
+  }
+
+  /* Source tags keep border */
+  .block-source-tag {
+    border-color: #999;
+    font-size: 6pt;
+  }
+}
