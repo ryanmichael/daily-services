@@ -27,11 +27,34 @@ const GLORY_PATTERNS = [
   /^Alleluia/i,
 ];
 
+// Patterns that identify GOA website UI artifacts / chanter attribution noise.
+// Blocks whose full text matches any of these are discarded entirely.
+const ARTIFACT_BLOCK_PATTERNS = [
+  // Chanter attribution lines: "c1011 - SDedes/ c1232 - GTheodoridis/ ..."
+  /^(c\d+\s*-\s*\w+\/\s*)+$/,
+  // UI button labels
+  /^(Show|Hide)\s+Stichologia$/i,
+];
+
+// Inline noise fragments stripped from text before further processing.
+const ARTIFACT_INLINE_PATTERNS = [
+  // Bracketed chanter/audio codes: [SAAS], [SD], [GR], etc.
+  /\[[A-Z]{1,6}\]/g,
+];
+
 function cleanText(text) {
-  return text
+  let t = text
     .replace(/\s+/g, ' ')
     .replace(/\u00a0/g, ' ')
     .trim();
+  for (const pattern of ARTIFACT_INLINE_PATTERNS) {
+    t = t.replace(pattern, '');
+  }
+  return t.replace(/\s+/g, ' ').trim();
+}
+
+function isArtifactBlock(text) {
+  return ARTIFACT_BLOCK_PATTERNS.some(p => p.test(text));
 }
 
 function detectSpeaker(text) {
@@ -53,6 +76,7 @@ function detectSourceBook(text) {
 
 function classifyText(text) {
   if (!text || text.length < 2) return 'empty';
+  if (isArtifactBlock(text)) return 'empty';
   if (GLORY_PATTERNS.some(p => p.test(text))) return 'glory';
   if (RUBRIC_PATTERNS.some(p => p.test(text))) return 'rubric';
   return 'text';
