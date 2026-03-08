@@ -21,6 +21,12 @@ function isArtifactBlock(text) {
   return false;
 }
 
+// Strip inline GOA artifact codes from block text (e.g. [SAAS], [SD], [GOASD]).
+function stripInlineArtifacts(text) {
+  if (!text) return text;
+  return text.replace(/\[[A-Z]{1,8}\]/g, '').replace(/\s+/g, ' ').trim();
+}
+
 // Returns true for blocks that are structural headers / book labels, not liturgical content.
 function isHeaderBlock(text) {
   if (!text) return true;
@@ -90,7 +96,11 @@ function formatDate(dateStr) {
 
 export default function ServiceSheet({ data }) {
   const { date, type, serviceTitle, blocks } = data;
-  const cleanBlocks = useMemo(() => blocks.filter(b => !isArtifactBlock(b.text)), [blocks]);
+  const cleanBlocks = useMemo(() =>
+    blocks
+      .filter(b => !isArtifactBlock(b.text))
+      .map(b => ({ ...b, text: stripInlineArtifacts(b.text) })),
+    [blocks]);
   const { context, bodyBlocks } = useMemo(() => splitPreambleFromBody(cleanBlocks), [cleanBlocks]);
   const sections = useMemo(() => groupIntoSections(bodyBlocks), [bodyBlocks]);
   const formattedDate = useMemo(() => formatDate(date), [date]);
