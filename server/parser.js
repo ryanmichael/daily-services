@@ -31,7 +31,8 @@ const GLORY_PATTERNS = [
 // Blocks whose full text matches any of these are discarded entirely.
 const ARTIFACT_BLOCK_PATTERNS = [
   // Chanter attribution lines: "c1011 - SDedes/ c1232 - GTheodoridis/ ..."
-  /^(c\d+\s*-\s*\w+\/\s*)+$/,
+  // Match any block whose text starts with a chanter code (c + digits + space-dash)
+  /^c\d+\s*-/,
   // UI button labels
   /^(Show|Hide)\s+Stichologia$/i,
 ];
