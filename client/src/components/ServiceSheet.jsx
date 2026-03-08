@@ -36,7 +36,7 @@ function stripInlineArtifacts(text) {
   for (let pass = 0; pass < 5; pass++) {
     const before = t;
     t = t.replace(/^(?:Idiomelon|Automelon|Prosomelon|Sticheron|Doxastikon|Theotokion|Stavrotheotokion|Kontakion|Troparion|Kathisma|Ikos|Oikos)\.\s*/i, '');
-    t = t.replace(/^(?:Plagal\s+)?(?:Mode|Tone)\s+\S[^.]*?\d\.\s*/i, '');
+    t = t.replace(/^(?:Plagal\s+)?(?:Mode|Tone)\s+(?:[a-z]+\.\s*)?\d+\.\s*/i, '');
     t = t.replace(/^(-\s*){2,}/, '');
     if (t === before) break;
   }
