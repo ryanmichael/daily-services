@@ -20,6 +20,8 @@ function isArtifactBlock(text) {
   if (/^(Show|Hide)\s+Stichologia$/i.test(t)) return true;
   // Source reference lines with trailing dashes: "From Menaion - - -"
   if (/^From\s+\w[\w\s]*(-\s*){2,}$/i.test(t)) return true;
+  // Navigation / editor UI noise words
+  if (/^(bookmark|note|placeholder|todo|fixme|tbd)$/i.test(t)) return true;
   return false;
 }
 
@@ -35,7 +37,7 @@ function stripInlineArtifacts(text) {
   //   Dash separators:   "- - -"
   for (let pass = 0; pass < 5; pass++) {
     const before = t;
-    t = t.replace(/^(?:Idiomelon|Automelon|Prosomelon|Sticheron|Doxastikon|Theotokion|Stavrotheotokion|Kontakion|Troparion|Kathisma|Ikos|Oikos)\.\s*/i, '');
+    t = t.replace(/^(?:Idiomelon|Idiomela|Automelon|Prosomelon|Sticheron|Doxastikon|Theotokion|Stavrotheotokion|Kontakion|Troparion|Kathisma|Ikos|Oikos|Prokeimenon|Prokimenon|Apolytikion|Apolitikion|Exapostilarion|Katavasias|Polyeleos|Anabathmoi|Evlogitaria)\.\s*/i, '');
     t = t.replace(/^(?:Plagal\s+)?(?:Mode|Tone)\s+(?:[a-z]+\.\s*)?\d+\.\s*/i, '');
     t = t.replace(/^(-\s*){2,}/, '');
     if (t === before) break;
@@ -120,8 +122,13 @@ export default function ServiceSheet({ data }) {
       .map(b => {
         // Reclassify text blocks that are rubric/instruction lines so they
         // render without speaker attribution (server may have missed these).
-        if (b.type === 'text' && /^From\s/i.test(b.text)) {
-          return { ...b, type: 'rubric', speaker: null };
+        if (b.type === 'text') {
+          const isInstruction =
+            // Source/category references: "From the Triodion.", "For the Saints."
+            /^(From|For)\s/i.test(b.text) ||
+            // Stage directions: "Stand for the Entrance.", "Bow your heads.", etc.
+            /^(Stand|Sit|Bow|Kneel|Rise|Prostrate|Venerate|Remain|Face|Turn)\b/i.test(b.text);
+          if (isInstruction) return { ...b, type: 'rubric', speaker: null };
         }
         return b;
       }),

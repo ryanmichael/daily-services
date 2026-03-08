@@ -14,7 +14,8 @@ const SOURCE_BOOKS = ['Octoechos', 'Triodion', 'Pentecostarion', 'Menaion', 'Hor
 
 // Patterns that identify rubric / instruction text (not actual liturgical text)
 const RUBRIC_PATTERNS = [
-  /^(The|Then|After|And|While|During|At|In|Before|Following|From)/i,
+  /^(The|Then|After|And|While|During|At|In|Before|Following|From|For)\b/i,
+  /^(Stand|Sit|Bow|Kneel|Rise|Prostrate|Venerate|Remain|Face|Turn)\b/i,
   /^\[.*\]$/,
   /^(Note:|N\.B\.)/i,
 ];
