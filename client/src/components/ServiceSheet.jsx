@@ -21,10 +21,10 @@ function isArtifactBlock(text) {
   return false;
 }
 
-// Strip inline GOA artifact codes from block text (e.g. [SAAS], [SD], [GOASD]).
+// Strip anything in square brackets from block text (e.g. [SAAS], [SD], [Note: ...]).
 function stripInlineArtifacts(text) {
   if (!text) return text;
-  return text.replace(/\[[A-Z]{1,8}\]/g, '').replace(/\s+/g, ' ').trim();
+  return text.replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim();
 }
 
 // Returns true for blocks that are structural headers / book labels, not liturgical content.
